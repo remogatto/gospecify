@@ -72,6 +72,7 @@ type ReporterSummary interface {
 }
 
 func DotReporter() ReporterSummary { return makeDotReporter() }
+func SpecdocReporter() ReporterSummary { return makeSpecdocReporter() }
 
 type Context interface {
 	Error(os.Error)

@@ -5,7 +5,8 @@ while [ $# -ne 0 ]; do
     shift
     case $param in
         -I) lib=$1 ; libs="$libs -I$lib"; shift ;;
-        *) files="$files $param"
+        -format) format=$1; shift;;
+        *) files="$param $files"
     esac
 done
 
@@ -70,7 +71,7 @@ func It(name string, block specify.ExampleBlock) {
 
 func main() {
 	specify.AdjustBlockDepth(1);
-	reporter := specify.DotReporter();
+        reporter := specify.${format-Dot}Reporter()
 	runner.Run(reporter);
 }
 EOF
