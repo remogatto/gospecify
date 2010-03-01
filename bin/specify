@@ -15,6 +15,15 @@ downcase()
     tr [[:upper:]] [[:lower:]]
 }
 
+capitalize_format()
+{
+    string0=${format-dot}
+    firstchar=${string0:0:1}
+    string1=${string0:1}
+    FirstChar=`echo "$firstchar" | tr a-z A-Z`
+    format="$FirstChar$string1"
+}
+
 find_os()
 {
     uname -s | downcase
@@ -46,6 +55,7 @@ default_o()
 [ x$LD == 'x' ] && LD=${O}l
 
 create_main() {
+    capitalize_format
     cat > _specify_.go <<EOF
 package main
 
@@ -71,7 +81,7 @@ func It(name string, block specify.ExampleBlock) {
 
 func main() {
 	specify.AdjustBlockDepth(1);
-        reporter := specify.${format-Dot}Reporter()
+        reporter := specify.${format}Reporter()
 	runner.Run(reporter);
 }
 EOF
