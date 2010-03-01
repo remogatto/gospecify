@@ -61,8 +61,8 @@ func (self *dotReporter) Finish() {
 	}
 }
 
-func (self *dotReporter) Pass() {
-	self.basicReporter.Pass()
+func (self *dotReporter) Pass(r Report) {
+	self.basicReporter.Pass(r)
 	fmt.Print(".")
 }
 

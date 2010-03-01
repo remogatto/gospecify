@@ -52,7 +52,7 @@ type Reporter interface {
 	Error(Report)
 	Fail(Report)
 	Finish()
-	Pass()
+	Pass(Report)
 	Pending(Report)
 }
 

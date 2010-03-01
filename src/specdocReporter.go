@@ -33,40 +33,40 @@ func makeSpecdocReporter() (result *specdocReporter) { return &specdocReporter{N
 
 func (self *specdocReporter) Error(r Report) {
 	self.basicReporter.Error(r)
-	fmt.Print("E")
+	fmt.Printf("- %s (ERROR)\n", r.Title())
 }
 
 func (self *specdocReporter) Fail(r Report) {
 	self.basicReporter.Fail(r)
-	fmt.Print("F")
+	fmt.Printf("- %s (FAILED)\n", r.Title())
 }
 
-// func printList(label string, reports <-chan Report) {
-// 	fmt.Printf("\n%v:\n", label)
-// 	for r := range reports {
-// 		fmt.Printf("\n- %v - %v\n  %v\n", r.Title(), r.Error(), r.Location())
-// 	}
-// }
+func (self *specdocReporter) printList(label string, reports <-chan Report) {
+	fmt.Printf("\n%v:\n", label)
+	for r := range reports {
+		fmt.Printf("\n- %v - %v\n  %v\n", r.Title(), r.Error(), r.Location())
+	}
+}
 
 func (self *specdocReporter) Finish() {
 	fmt.Printf("\nPassing: %v  Failing: %v  Pending: %v  Errors: %v\n", self.PassingCount(), self.FailingCount(), self.PendingCount(), self.ErrorCount())
 	if self.ErrorCount() > 0 {
-		printList("Errors", self.EachError())
+		self.printList("Errors", self.EachError())
 	}
 	if self.FailingCount() > 0 {
-		printList("Failing Examples", self.EachFailure())
+		self.printList("Failing Examples", self.EachFailure())
 	}
 	if self.PendingCount() > 0 {
-		printList("Pending Examples", self.EachPending())
+		self.printList("Pending Examples", self.EachPending())
 	}
 }
 
-func (self *specdocReporter) Pass() {
-	self.basicReporter.Pass()
-	fmt.Print(".")
+func (self *specdocReporter) Pass(r Report) {
+	self.basicReporter.Pass(r)
+	fmt.Printf("- %s\n", r.Title())
 }
 
 func (self *specdocReporter) Pending(r Report) {
 	self.basicReporter.Pending(r)
-	fmt.Print("*")
+	fmt.Printf("- %s (Not yet implemented)\n", r.Title())
 }
