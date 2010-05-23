@@ -27,7 +27,7 @@ import (
 	"specify"
 	"strings"
 
-	t "../src/testspecify"
+	t "../testspecify"
 )
 
 func HavePassing(expected interface{}) reporterMatcher {

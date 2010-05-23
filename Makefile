@@ -35,11 +35,11 @@ all: test
 
 test:
 	make testpackage
-	cd ../spec; $(SPECIFY) *.go
+	cd spec; $(SPECIFY) *.go
 
 format:
 	gofmt -w *.go
-	cd ../spec; gofmt -w *.go
+	cd spec; gofmt -w *.go
 
 clean:
 	rm -rf *.[a68] $(TESTPROG) _test
@@ -48,7 +48,7 @@ package: $(PACKAGE).a
 
 install: package
 	cp specify.a $(GOROOT)/pkg/$(GOOS)_$(GOARCH)
-	cp ../bin/specify $(GOBIN)
+	cp bin/specify $(GOBIN)
 
 $(PACKAGE).a: $(PACKAGE).$O
 	gopack grc $@ $(PACKAGE).$O
