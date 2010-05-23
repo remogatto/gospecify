@@ -29,49 +29,7 @@ type dotFormat int
 
 func makeDotReporter() ReporterSummary { return makeOutputReporter(dotFormat(0)) }
 
-<<<<<<< HEAD
-func (self *dotReporter) Error(r Report) {
-	self.basicReporter.Error(r)
-	fmt.Print("E")
-}
-
-func (self *dotReporter) Fail(r Report) {
-	self.basicReporter.Fail(r)
-	fmt.Print("F")
-}
-
-func printList(label string, reports <-chan Report) {
-	fmt.Printf("\n%v:\n", label)
-	for r := range reports {
-		fmt.Printf("\n- %v - %v\n  %v\n", r.Title(), r.Error(), r.Location())
-	}
-}
-
-func (self *dotReporter) Finish() {
-	fmt.Printf("\nPassing: %v  Failing: %v  Pending: %v  Errors: %v\n", self.PassingCount(), self.FailingCount(), self.PendingCount(), self.ErrorCount())
-	if self.ErrorCount() > 0 {
-		printList("Errors", self.EachError())
-	}
-	if self.FailingCount() > 0 {
-		printList("Failing Examples", self.EachFailure())
-	}
-	if self.PendingCount() > 0 {
-		printList("Pending Examples", self.EachPending())
-	}
-}
-
-func (self *dotReporter) Pass(r Report) {
-	self.basicReporter.Pass(r)
-	fmt.Print(".")
-}
-
-func (self *dotReporter) Pending(r Report) {
-	self.basicReporter.Pending(r)
-	fmt.Print("*")
-}
-=======
 func (dotFormat) Error(r Report)   { fmt.Print("E") }
 func (dotFormat) Fail(r Report)    { fmt.Print("F") }
 func (dotFormat) Pass(r Report)    { fmt.Print(".") }
 func (dotFormat) Pending(r Report) { fmt.Print("*") }
->>>>>>> d1763e13c91c7903170160620a358f8826dea326

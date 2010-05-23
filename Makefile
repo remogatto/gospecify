@@ -18,25 +18,52 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+PACKAGE=specify
+TESTPROG=test_$(PACKAGE)
+
+include $(GOROOT)/src/Make.$(GOARCH)
+export GC
+export LD
+export O
+
+SRC=$(wildcard *.go)
+
 GOBIN=$(HOME)/bin
 SPECIFY=specify
 
 all: test
 
-clean:
-	cd src; make clean
-
-format:
-	cd src; gofmt -w *.go
-	cd spec; gofmt -w *.go
-
 test:
-	cd src; make testpackage
+	make testpackage
 	cd spec; $(SPECIFY) *.go
 
-package:
-	cd src; make package
+format:
+	gofmt -w *.go
+	cd spec; gofmt -w *.go
+
+clean:
+	rm -rf *.[a68] $(TESTPROG) _test
+
+package: $(PACKAGE).a
 
 install: package
-	cp src/specify.a $(GOROOT)/pkg/$(GOOS)_$(GOARCH)
+	cp specify.a $(GOROOT)/pkg/$(GOOS)_$(GOARCH)
 	cp bin/specify $(GOBIN)
+
+$(PACKAGE).a: $(PACKAGE).$O
+	gopack grc $@ $(PACKAGE).$O
+
+$(PACKAGE).$O: $(SRC)
+	$(GC) -o $@ $(SRC)
+
+testpackage: test$(PACKAGE).a
+
+test$(PACKAGE).a: test$(PACKAGE).$O
+	gopack grc $@ test$(PACKAGE).$O
+
+test$(PACKAGE).$O: _test $(SRC)
+	for i in $(SRC); do sed -e 's/package $(PACKAGE)/package test$(PACKAGE)/' < $$i > _test/$$i; done
+	$(GC) -o $@ _test/*.go
+
+_test:
+	mkdir _test
