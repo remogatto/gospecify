@@ -15,13 +15,14 @@ downcase()
     tr [[:upper:]] [[:lower:]]
 }
 
-capitalize_format()
+upcase()
 {
-    string0=${format-dot}
-    firstchar=${string0:0:1}
-    string1=${string0:1}
-    FirstChar=`echo "$firstchar" | tr a-z A-Z`
-    format="$FirstChar$string1"
+    tr [[:lower:]] [[:upper:]]
+}
+
+capitalize()
+{
+    echo $(echo ${1:0:1} | upcase)$(echo ${1:1} | downcase)
 }
 
 find_os()
@@ -30,7 +31,7 @@ find_os()
 }
 
 find_arch()
-{ 
+{
     case `uname -p` in
         i386) echo "386" ;;
         x86_64) echo "amd64" ;;
@@ -54,8 +55,17 @@ default_o()
 [ x$GC == 'x' ] && GC=${O}g
 [ x$LD == 'x' ] && LD=${O}l
 
+normalize_format()
+{
+    if [[ "x$format" == x ]]; then
+        format=Dot
+    else
+        format=$(capitalize $format)
+    fi
+}
+
 create_main() {
-    capitalize_format
+    normalize_format
     cat > _specify_.go <<EOF
 package main
 

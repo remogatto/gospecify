@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Samuel Tesla <samuel.tesla@gmail.com>
+Copyright (c) 2009-2010 Samuel Tesla <samuel.tesla@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -71,7 +71,7 @@ type ReporterSummary interface {
 	Summary
 }
 
-func DotReporter() ReporterSummary { return makeDotReporter() }
+func DotReporter() ReporterSummary     { return makeDotReporter() }
 func SpecdocReporter() ReporterSummary { return makeSpecdocReporter() }
 
 type Context interface {

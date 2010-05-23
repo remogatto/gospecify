@@ -25,19 +25,30 @@ import (
 	"fmt"
 )
 
-type dotFormat int
-
-func makeDotReporter() ReporterSummary { return makeOutputReporter(dotFormat(0)) }
-
-<<<<<<< HEAD
-func (self *dotReporter) Error(r Report) {
-	self.basicReporter.Error(r)
-	fmt.Print("E")
+type OutputStrategy interface {
+	Error(Report)
+	Fail(Report)
+	Pass(Report)
+	Pending(Report)
 }
 
-func (self *dotReporter) Fail(r Report) {
+type outputReporter struct {
+	*basicReporter
+	output OutputStrategy
+}
+
+func makeOutputReporter(s OutputStrategy) ReporterSummary {
+	return &outputReporter{NewBasicReporter(), s}
+}
+
+func (self *outputReporter) Error(r Report) {
+	self.basicReporter.Error(r)
+	self.output.Error(r)
+}
+
+func (self *outputReporter) Fail(r Report) {
 	self.basicReporter.Fail(r)
-	fmt.Print("F")
+	self.output.Fail(r)
 }
 
 func printList(label string, reports <-chan Report) {
@@ -47,7 +58,7 @@ func printList(label string, reports <-chan Report) {
 	}
 }
 
-func (self *dotReporter) Finish() {
+func (self *outputReporter) Finish() {
 	fmt.Printf("\nPassing: %v  Failing: %v  Pending: %v  Errors: %v\n", self.PassingCount(), self.FailingCount(), self.PendingCount(), self.ErrorCount())
 	if self.ErrorCount() > 0 {
 		printList("Errors", self.EachError())
@@ -60,18 +71,12 @@ func (self *dotReporter) Finish() {
 	}
 }
 
-func (self *dotReporter) Pass(r Report) {
+func (self *outputReporter) Pass(r Report) {
 	self.basicReporter.Pass(r)
-	fmt.Print(".")
+	self.output.Pass(r)
 }
 
-func (self *dotReporter) Pending(r Report) {
+func (self *outputReporter) Pending(r Report) {
 	self.basicReporter.Pending(r)
-	fmt.Print("*")
+	self.output.Pending(r)
 }
-=======
-func (dotFormat) Error(r Report)   { fmt.Print("E") }
-func (dotFormat) Fail(r Report)    { fmt.Print("F") }
-func (dotFormat) Pass(r Report)    { fmt.Print(".") }
-func (dotFormat) Pending(r Report) { fmt.Print("*") }
->>>>>>> d1763e13c91c7903170160620a358f8826dea326

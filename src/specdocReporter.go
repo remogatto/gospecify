@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
 Copyright (c) 2009 Samuel Tesla <samuel.tesla@gmail.com>
+=======
+Copyright (c) 2009-2010 Samuel Tesla <samuel.tesla@gmail.com>
+>>>>>>> d1763e13c91c7903170160620a358f8826dea326
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,48 +29,13 @@ import (
 	"fmt"
 )
 
-type specdocReporter struct {
-	*basicReporter
-}
+type specdocFormat int
 
-func makeSpecdocReporter() (result *specdocReporter) { return &specdocReporter{NewBasicReporter()} }
+func makeSpecdocReporter() ReporterSummary { return makeOutputReporter(specdocFormat(0)) }
 
-func (self *specdocReporter) Error(r Report) {
-	self.basicReporter.Error(r)
-	fmt.Printf("- %s (ERROR)\n", r.Title())
-}
-
-func (self *specdocReporter) Fail(r Report) {
-	self.basicReporter.Fail(r)
-	fmt.Printf("- %s (FAILED)\n", r.Title())
-}
-
-func (self *specdocReporter) printList(label string, reports <-chan Report) {
-	fmt.Printf("\n%v:\n", label)
-	for r := range reports {
-		fmt.Printf("\n- %v - %v\n  %v\n", r.Title(), r.Error(), r.Location())
-	}
-}
-
-func (self *specdocReporter) Finish() {
-	fmt.Printf("\nPassing: %v  Failing: %v  Pending: %v  Errors: %v\n", self.PassingCount(), self.FailingCount(), self.PendingCount(), self.ErrorCount())
-	if self.ErrorCount() > 0 {
-		self.printList("Errors", self.EachError())
-	}
-	if self.FailingCount() > 0 {
-		self.printList("Failing Examples", self.EachFailure())
-	}
-	if self.PendingCount() > 0 {
-		self.printList("Pending Examples", self.EachPending())
-	}
-}
-
-func (self *specdocReporter) Pass(r Report) {
-	self.basicReporter.Pass(r)
-	fmt.Printf("- %s\n", r.Title())
-}
-
-func (self *specdocReporter) Pending(r Report) {
-	self.basicReporter.Pending(r)
+func (specdocFormat) Error(r Report) { fmt.Printf("- %s (ERROR)\n", r.Title()) }
+func (specdocFormat) Fail(r Report)  { fmt.Printf("- %s (FAILED)\n", r.Title()) }
+func (specdocFormat) Pass(r Report)  { fmt.Printf("- %s\n", r.Title()) }
+func (specdocFormat) Pending(r Report) {
 	fmt.Printf("- %s (Not yet implemented)\n", r.Title())
 }
